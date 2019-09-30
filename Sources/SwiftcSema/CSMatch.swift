@@ -188,8 +188,18 @@ extension ConstraintSystem {
         let subOptions = decompositionOptions(options)
         
         // <Q02 hint="match arg and ret" />
-        
-        return .solved
+
+        let argResult = matchTypes(kind: subKind, left: leftArg, right: rightArg, options: subOptions)
+        let retResult = matchTypes(kind: subKind, left: leftRet, right: rightRet, options: subOptions)
+
+        switch (argResult, retResult) {
+        case (.solved, .solved):
+            return .solved
+        case (.solved, .ambiguous), (.ambiguous, .solved), (.ambiguous, .ambiguous):
+            return .ambiguous
+        default:
+            return .failure
+        }
     }
     
     // ref: matchDeepEqualityTypes at CSSimplify.cpp
@@ -200,7 +210,10 @@ extension ConstraintSystem {
         let subOptions = decompositionOptions(options)
         
         // <Q01 hint="consider primitive type" />
-        
+        if leftType is PrimitiveType, rightType is PrimitiveType {
+            return .solved
+        }
+
         if let leftType = leftType as? OptionalType,
         let rightType = rightType as? OptionalType
         {

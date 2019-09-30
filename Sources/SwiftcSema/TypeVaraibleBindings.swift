@@ -45,7 +45,27 @@ public struct TypeVariableBindings {
         }
         
         // <Q03 hint="understand data structure" />
-    }
+        let t1: TypeVariable
+        let t2: TypeVariable
+
+        if type1.id < type2.id  {
+            t1 = type1
+            t2 = type2
+        } else {
+            t1 = type2
+            t2 = type1
+        }
+        if let fixed = t1.fixedType(bindings: self) {
+            setBinding(for: t2, .fixed(fixed))
+        } else {
+            map.forEach { src, dst in
+                if case .transfer(t2) = dst {
+                    setBinding(for: src, .transfer(t1))
+                }
+            }
+            setBinding(for: t2, .transfer(t1))
+        }
+   }
     
     public mutating func assign(variable: TypeVariable,
                                 type: Type)
