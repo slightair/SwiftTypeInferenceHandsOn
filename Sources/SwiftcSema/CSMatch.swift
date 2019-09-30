@@ -188,17 +188,12 @@ extension ConstraintSystem {
         let subOptions = decompositionOptions(options)
         
         // <Q02 hint="match arg and ret" />
+        // https://github.com/apple/swift/blob/d1c87f3c936c41418ee93320e42d523b3f51b6df/lib/Sema/CSSimplify.cpp#L1635-L1688
 
-        let argResult = matchTypes(kind: subKind, left: leftArg, right: rightArg, options: subOptions)
-        let retResult = matchTypes(kind: subKind, left: leftRet, right: rightRet, options: subOptions)
-
-        switch (argResult, retResult) {
-        case (.solved, .solved):
-            return .solved
-        case (.solved, .ambiguous), (.ambiguous, .solved), (.ambiguous, .ambiguous):
-            return .ambiguous
-        default:
+        if matchTypes(kind: subKind, left: leftArg, right: rightArg, options: subOptions) == .failure {
             return .failure
+        } else {
+            return matchTypes(kind: subKind, left: leftRet, right: rightRet, options: subOptions)
         }
     }
     
@@ -210,6 +205,7 @@ extension ConstraintSystem {
         let subOptions = decompositionOptions(options)
         
         // <Q01 hint="consider primitive type" />
+        // https://github.com/apple/swift/blob/d1c87f3c936c41418ee93320e42d523b3f51b6df/lib/Sema/CSSimplify.cpp#L1765-L1800
         if leftType is PrimitiveType, rightType is PrimitiveType {
             return .solved
         }

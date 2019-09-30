@@ -71,7 +71,8 @@ extension ConstraintSystem {
             // consider priority for bindings and disjunctions
             
             // <Q10 hint="invoke substeps" />
-            if let bestBindings = bestBindingsOrNone {
+            // https://github.com/apple/swift/blob/d1c87f3c936c41418ee93320e42d523b3f51b6df/lib/Sema/CSStep.cpp#L332-L341
+            if let bestBindings = bestBindingsOrNone, disjunctionOrNone == nil {
                 _ = TypeVariableStep(work: work, bindings: bestBindings).run()
                 return true
             } else if let disjunction = disjunctionOrNone {

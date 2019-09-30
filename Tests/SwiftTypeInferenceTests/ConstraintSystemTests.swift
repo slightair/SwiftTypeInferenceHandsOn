@@ -389,7 +389,7 @@ final class ConstraintSystemTests: XCTestCase {
         XCTAssertFalse(cts.simplify())
     }
     
-    func testConvFunctionParamCotravarianceInvert() {
+    func testConvFunctionParamContravarianceInvert() {
         let cts = ConstraintSystem()
         
         let int = PrimitiveType.int
