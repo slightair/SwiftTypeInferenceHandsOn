@@ -121,6 +121,13 @@ extension ConstraintSystem.Solution {
                 return expr
             case .valueToOptional:
                 // <Q12 hint="use `InjectIntoOptionalExpr` and `coerce`" />
+                // https://github.com/apple/swift/blob/d1c87f3c936c41418ee93320e42d523b3f51b6df/lib/Sema/CSApply.cpp#L6244-L6257
+
+                guard let toTy = toTy as? OptionalType else { throw MessageError("not optional") }
+
+                var expr = try coerce(expr: expr, to: toTy.wrapped)
+                expr = InjectIntoOptionalExpr(subExpr: expr, type: toTy)
+
                 return expr
             case .optionalToOptional:
                 return try coerceOptionalToOptional(expr: expr, to: toTy)

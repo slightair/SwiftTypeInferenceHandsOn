@@ -190,7 +190,7 @@ extension ConstraintSystem {
         // <Q02 hint="match arg and ret" />
         // https://github.com/apple/swift/blob/d1c87f3c936c41418ee93320e42d523b3f51b6df/lib/Sema/CSSimplify.cpp#L1635-L1688
 
-        if matchTypes(kind: subKind, left: leftArg, right: rightArg, options: subOptions) == .failure {
+        if matchTypes(kind: subKind, left: rightArg, right: leftArg, options: subOptions) == .failure {
             return .failure
         } else {
             return matchTypes(kind: subKind, left: leftRet, right: rightRet, options: subOptions)
