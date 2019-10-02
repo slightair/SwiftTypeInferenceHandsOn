@@ -57,7 +57,7 @@ public final class TypeChecker {
                     vd.type = varTy
 
                     // <Q13 hint="see visitCallExpr" />
-                    let expr = InjectIntoOptionalExpr(subExpr: expr, type: varTy)
+                    let expr = try solution.coerce(expr: expr, to: varTy)
                     return expr
             })
                 

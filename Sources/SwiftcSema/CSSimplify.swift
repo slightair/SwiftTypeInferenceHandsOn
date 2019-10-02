@@ -67,6 +67,7 @@ extension ConstraintSystem {
         case .valueToOptional:
             // <Q09 hint="see optionalToOptional" />
             // https://github.com/apple/swift/blob/d1c87f3c936c41418ee93320e42d523b3f51b6df/lib/Sema/CSSimplify.cpp#L7345-L7357
+
             if let leftType = leftType as? PrimitiveType,
                 let rightType = rightType as? OptionalType
             {
@@ -75,6 +76,16 @@ extension ConstraintSystem {
                                   right: rightType.wrapped,
                                   options: subOptions)
             }
+
+            if let leftType = leftType as? OptionalType,
+                let rightType = rightType as? OptionalType
+            {
+                return matchTypes(kind: kind,
+                                  left: leftType,
+                                  right: rightType.wrapped,
+                                  options: subOptions)
+            }
+
             return .failure
         case .optionalToOptional:
             if let leftType = leftType as? OptionalType,
